@@ -5,7 +5,7 @@ import json
 import httpx
 import pytest
 
-from src.gti.client import Client
+from src.irum_imagen.client import Client
 from .conftest import fixture_text, make_jwt
 
 
@@ -159,7 +159,7 @@ def test_client_generate_image_forwards_size(tmp_path):
 
 
 def test_client_generate_image_defaults_to_flare_image_model(tmp_path, monkeypatch):
-    monkeypatch.delenv("CODEX_IMAGEGEN_IMAGE_MODEL", raising=False)
+    monkeypatch.delenv("IRUM_IMAGEN_IMAGE_MODEL", raising=False)
     auth_file = tmp_path / "auth.json"
     installation_file = tmp_path / "installation_id"
     auth_file.write_text(

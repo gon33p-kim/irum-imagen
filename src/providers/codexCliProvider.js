@@ -180,7 +180,7 @@ export function createCodexCliProvider(config) {
         throw error;
       }
 
-      const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'codex-imagegen-cli-'));
+      const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'irum-imagen-cli-'));
       const lastMessagePath = path.join(tempDir, 'last.txt');
       const wrappedPrompt = buildWrappedPrompt(prompt);
       const startedAtMs = Date.now();

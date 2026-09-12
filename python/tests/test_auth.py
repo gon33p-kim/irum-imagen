@@ -6,8 +6,8 @@ from typing import cast
 
 import pytest
 
-from src.gti.auth import load_codex_session, validate_codex_session
-from src.gti.errors import CodexError
+from src.irum_imagen.auth import load_codex_session, validate_codex_session
+from src.irum_imagen.errors import CodexError
 from .conftest import make_jwt
 
 

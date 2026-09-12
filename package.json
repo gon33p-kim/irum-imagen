@@ -1,9 +1,9 @@
 {
-  "name": "god-tibo-imagen",
-  "version": "0.4.0",
+  "name": "irum-imagen",
+  "version": "0.1.0",
   "private": false,
   "type": "module",
-  "description": "Node.js library and CLI for Codex private ChatGPT-authenticated image generation",
+  "description": "GPT Image 2.5 generation and editing from Codex ChatGPT authentication",
   "main": "./src/index.js",
   "exports": {
     ".": {
@@ -15,11 +15,14 @@
   },
   "types": "./types/index.d.ts",
   "bin": {
-    "gti": "./src/cli/generate.js"
+    "irum-imagen": "./src/cli/generate.js",
+    "iim": "./src/cli/generate.js"
   },
   "files": [
     "src/",
     "types/",
+    "skills/irum-imagen/",
+    "NOTICE.md",
     "VERSION"
   ],
   "scripts": {
@@ -37,6 +40,8 @@
   "keywords": [
     "codex",
     "image-generation",
+    "gpt-image-2.5",
+    "agent-skill",
     "chatgpt",
     "openai",
     "cli"
@@ -44,8 +49,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NomaDamas/god-tibo-imagen.git"
+    "url": "https://github.com/IrumHahn/irum-imagen.git"
   },
+  "homepage": "https://github.com/IrumHahn/irum-imagen#readme",
+  "bugs": {
+    "url": "https://github.com/IrumHahn/irum-imagen/issues"
+  },
+  "author": "IrumHahn",
   "devDependencies": {
     "typescript": "^5.7.0"
   }

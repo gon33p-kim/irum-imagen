@@ -1,369 +1,262 @@
-<p align="center">
-  <img src="assets/saint-tibo.png" alt="Saint Tibo" width="600">
-</p>
+# irum-imagen
 
-# god-tibo-imagen
+Codex에 로그인된 ChatGPT 계정을 이용해 GPT Image 2.5 이미지를 생성하고
+편집하는 CLI, Node.js/Python SDK, Agent Skill 패키지입니다.
 
-Node.js library and CLI for sending image-generation requests to Codex's private ChatGPT-authenticated backend path.
+> [!WARNING]
+> 이 프로젝트는 OpenAI의 공식 공개 API가 아닌 Codex의 비공개 백엔드 경로를
+> 사용합니다. 예고 없이 동작이 바뀌거나 중단될 수 있으며, OpenAI 공식 제품이
+> 아닙니다.
 
-> WARNING: This is **not** a supported public API integration. It depends on private Codex request behavior that may change without notice.
+## 제공 기능
 
-## What it does
+- GPT Image 2.5 Flare를 기본 이미지 모델로 사용
+- GPT Image 2.5 Sunburst 선택 가능
+- 텍스트 이미지 생성과 기존 이미지 편집
+- 정사각형·가로형·세로형 출력 크기 요청
+- 실제 호출 없이 인증과 요청 구조를 확인하는 드라이런
+- Codex, Claude Code, Cursor 등에서 사용할 수 있는 Agent Skill
+- 디버그 출력의 토큰·계정 ID·이미지 데이터 자동 마스킹
 
-- Reuses local Codex ChatGPT auth from `~/.codex/auth.json`
-- Reads `~/.codex/installation_id` when available
-- Sends a `POST` request to `https://chatgpt.com/backend-api/codex/responses`
-- Requests the built-in `image_generation` tool with `output_format: png`
-- Parses streamed SSE output and saves the resulting PNG
-- Supports dry-run and sanitized debug dumps with request/response metadata minimization
-- Also supports a `codex exec` fallback provider that verifies real PNG output from `~/.codex/generated_images/`
+## 학생용 빠른 설치
 
-## Requirements
+### 1. 준비사항
 
-- Node.js 20+
-- Existing local Codex ChatGPT login state
-- A Codex/ChatGPT account that is entitled to image generation on the private backend
+- Node.js 20 이상
+- Codex CLI 또는 Codex 데스크톱 앱에서 ChatGPT 로그인 완료
+- 해당 ChatGPT 계정에서 이미지 생성 기능 사용 가능
 
-## Installation Guide
-
-### Prerequisites
-
-- **Node.js 20+** (for CLI and Node.js library)
-- **Python 3.10+** (for Python SDK)
-- Existing local Codex ChatGPT login state (`~/.codex/auth.json`)
-- A Codex/ChatGPT account entitled to image generation on the private backend
-
-### CLI (global)
+로그인 상태를 확인합니다.
 
 ```bash
-npm install -g god-tibo-imagen
+codex login status
 ```
 
-After installation, the `gti` command is available globally:
+### 2. CLI 설치
+
+현재 GitHub 저장소에서 직접 설치합니다.
 
 ```bash
-gti --version
-gti --help
+npm install -g github:IrumHahn/irum-imagen
 ```
 
-### Node.js Library
+설치를 확인합니다.
 
 ```bash
-npm install god-tibo-imagen
+irum-imagen --version
+irum-imagen --help
+```
+
+짧은 별칭 `iim`도 사용할 수 있습니다.
+
+### 3. 안전한 드라이런
+
+이미지를 생성하거나 사용량을 소모하지 않고 인증과 모델 지정만 확인합니다.
+
+```bash
+irum-imagen \
+  --prompt "파란색 정사각형 아이콘" \
+  --image-model gpt-image-2.5-flare \
+  --dry-run
+```
+
+출력의 `tools[0].model`이 `gpt-image-2.5-flare`인지 확인하세요.
+
+### 4. 첫 이미지 생성
+
+```bash
+irum-imagen \
+  --prompt "흰 배경 위에 놓인 파란색 머그컵, 자연스러운 제품 사진, 글자 없음" \
+  --output ./blue-mug.png
+```
+
+성공하면 JSON의 `savedPath`에 저장된 PNG 경로가 표시됩니다.
+
+## GPT Image 2.5 모델 선택
+
+Flare가 기본값이므로 일반 생성에서는 모델 옵션을 생략할 수 있습니다.
+
+```bash
+# 빠른 일반 생성: gpt-image-2.5-flare
+irum-imagen --prompt "따뜻한 수채화풍 서울 골목" --output ./seoul.png
+
+# 정밀 편집·최고 품질: gpt-image-2.5-sunburst
+irum-imagen \
+  --prompt "제품의 형태와 로고는 유지하고 배경만 밝은 스튜디오로 변경" \
+  --image ./product.png \
+  --image-model gpt-image-2.5-sunburst \
+  --output ./product-edited.png
+```
+
+`--model`은 이미지 모델이 아니라 요청을 지휘하는 메인 모델을 지정합니다.
+이미지 모델은 반드시 `--image-model`로 선택하세요.
+
+## 이미지 편집과 여러 참고 이미지
+
+```bash
+# 한 장 편집
+irum-imagen \
+  --prompt "고양이에게 빨간 모자를 씌워줘" \
+  --image ./cat.png \
+  --output ./cat-hat.png
+
+# 여러 장을 참고해 새 이미지 생성
+irum-imagen \
+  --prompt "첫 이미지의 구도와 두 번째 이미지의 색감을 결합해줘" \
+  --image ./composition.png \
+  --image ./colors.png \
+  --output ./combined.png
+```
+
+입력 형식은 PNG, JPG/JPEG, GIF, WebP를 지원합니다.
+
+## 출력 크기
+
+```bash
+irum-imagen \
+  --prompt "노을이 지는 산 풍경" \
+  --size 1536x1024 \
+  --output ./sunset.png
+```
+
+요청 가능한 값:
+
+- `auto`
+- `1024x1024`, `2048x2048`
+- `1536x1024`, `2048x1152`, `3840x2160`
+- `1024x1536`, `2160x3840`
+
+비공개 백엔드 특성상 실제 반환 크기는 요청값과 다를 수 있습니다.
+
+## Agent Skill 설치
+
+CLI를 먼저 설치한 뒤 Agent Skill을 설치합니다.
+
+```bash
+npx skills add IrumHahn/irum-imagen --skill irum-imagen
+```
+
+Codex에서 다음처럼 명시적으로 호출할 수 있습니다.
+
+```text
+$irum-imagen을 사용해서 흰 배경의 화장품 제품 사진을 만들어줘.
+```
+
+수동 설치 경로는 다음과 같습니다.
+
+| 도구 | 설치 경로 |
+| --- | --- |
+| Codex | `~/.codex/skills/irum-imagen/` |
+| Claude Code | `~/.claude/skills/irum-imagen/` |
+| OpenCode | `~/.config/opencode/skills/irum-imagen/` |
+| Cursor·Continue·Gemini CLI | 프로젝트의 `.agents/skills/irum-imagen/` |
+
+배포용 스킬 원본은 [`skills/irum-imagen`](skills/irum-imagen)에 있습니다.
+
+## Node.js SDK
+
+```bash
+npm install github:IrumHahn/irum-imagen
 ```
 
 ```javascript
-import { createProvider, resolveConfig } from 'god-tibo-imagen';
-```
+import { createProvider, resolveConfig } from "irum-imagen";
 
-### Python SDK
-
-```bash
-pip install god-tibo-imagen
-```
-
-```python
-from gti import Client
-```
-
----
-
-## CLI Usage
-
-```bash
-npm test
-npm run check
-gti --prompt "flat blue square icon" --output ./out/blue-square.png
-```
-
-### Image input
-
-You can provide existing images as additional context alongside your text prompt. Images are embedded as base64 data URLs and sent with the request. Use `--image` multiple times for multiple images.
-
-```bash
-# single image
-gti --prompt "Make this cat wear a hat" --image ./cat.png --output ./cat-hat.png
-
-# multiple images
-gti --prompt "Combine these two styles" --image ./style-a.png --image ./style-b.png --output ./combined.png
-```
-
-Supported formats: `png`, `jpg`/`jpeg`, `gif`, `webp`.
-
-### Output size
-
-Pass `--size <value>` to control the output image dimensions. Supported values match the gpt-image-2 spec:
-
-```bash
-gti --prompt "a sunset over mountains" --size 1536x1024 --output ./sunset.png
-```
-
-Supported sizes:
-
-- `auto` (model decides)
-- `1024x1024`, `2048x2048` (square)
-- `1536x1024`, `2048x1152`, `3840x2160` (landscape)
-- `1024x1536`, `2160x3840` (portrait)
-
-The `--size` flag is forwarded to the `image_generation` tool config and is honored by the private Codex backend. The `codex-cli` provider does not support `--size`; direct `codex-cli` use and `auto` fallback fail fast rather than silently ignoring requested dimensions.
-
-### Image model (ChatGPT Images 2.5)
-
-The private Codex path defaults to ChatGPT Images 2.5 `gpt-image-2.5-flare`. Pass `--image-model <name>` to override:
-
-- `gpt-image-2.5-flare` — default fast tier (up to 50% lower latency than Images 2.0)
-- `gpt-image-2.5-sunburst` — slower, higher-precision tier
-
-```bash
-gti --prompt "a sunset over mountains" --output ./sunset.png
-gti --prompt "a sunset over mountains" --image-model gpt-image-2.5-sunburst --output ./sunset.png
-```
-
-The value is forwarded as `model` on the `image_generation` tool config. `CODEX_IMAGEGEN_IMAGE_MODEL` overrides the default. The `codex-cli` provider does not support image model selection; an explicit `--image-model` or env override fail-fast rather than silently dropping the requested model.
-
-### Provider modes
-
-```bash
-# direct private HTTP path
-gti --provider private-codex --prompt "flat blue square icon" --output ./out.png
-
-# borrow the Hermes-style codex exec workaround
-gti --provider codex-cli --prompt "flat blue square icon" --output ./out.png
-
-# try private HTTP first, then fall back to codex-cli
-gti --provider auto --prompt "flat blue square icon" --output ./out.png
-```
-
-### Dry run
-
-```bash
-gti --prompt "flat blue square icon" --dry-run
-```
-
-### Live smoke test
-
-```bash
-npm run smoke:live -- "Generate a tiny flat blue square icon." ./smoke-output.png
-```
-
-## Programmatic API (Node.js)
-
-```javascript
-import { createProvider, resolveConfig, loadCodexSession, validateCodexSession } from 'god-tibo-imagen';
-
-const config = resolveConfig({ provider: 'private-codex' });
+const config = resolveConfig({ provider: "private-codex" });
 const provider = createProvider(config);
 
 const result = await provider.generateImage({
-  prompt: 'flat blue square icon',
-  model: 'gpt-5.4',
-  outputPath: './out.png',
-  dryRun: false,
-  debug: false
+  prompt: "미니멀한 파란색 아이콘",
+  model: "gpt-5.4",
+  imageModel: "gpt-image-2.5-flare",
+  outputPath: "./icon.png",
 });
 
 console.log(result.savedPath);
-```
-
-You can also pass existing images as input:
-
-```javascript
-// single image
-const result = await provider.generateImage({
-  prompt: 'Make this cat wear a hat',
-  model: 'gpt-5.4',
-  outputPath: './cat-hat.png',
-  images: ['data:image/png;base64,iVBORw0KGgo...']
-});
-
-// with output size
-const result = await provider.generateImage({
-  prompt: 'a sunset over mountains',
-  model: 'gpt-5.4',
-  outputPath: './sunset.png',
-  size: '1536x1024'
-});
-
-// with an image model (ChatGPT Images 2.5)
-const result = await provider.generateImage({
-  prompt: 'a sunset over mountains',
-  model: 'gpt-5.4',
-  outputPath: './sunset.png',
-  imageModel: 'gpt-image-2.5-flare'
-});
-
-// multiple images
-const result = await provider.generateImage({
-  prompt: 'Combine these two styles',
-  model: 'gpt-5.4',
-  outputPath: './combined.png',
-  images: [
-    'data:image/png;base64,abc...',
-    'data:image/png;base64,def...'
-  ]
-});
 ```
 
 ## Python SDK
 
+```bash
+pip install "git+https://github.com/IrumHahn/irum-imagen.git#subdirectory=python"
+```
+
 ```python
-from gti import Client
+from irum_imagen import Client
 
 client = Client(provider="private-codex")
 result = client.generate_image(
-    prompt="flat blue square icon",
-    model="gpt-5.4",
-    output_path="./out.png"
-)
-print(result.saved_path)
-
-# with output size
-result = client.generate_image(
-    prompt="a sunset over mountains",
-    model="gpt-5.4",
-    output_path="./sunset.png",
-    size="1536x1024"
-)
-print(result.saved_path)
-
-# with an image model (ChatGPT Images 2.5)
-result = client.generate_image(
-    prompt="a sunset over mountains",
-    model="gpt-5.4",
-    output_path="./sunset.png",
-    image_model="gpt-image-2.5-flare"
+    prompt="미니멀한 파란색 아이콘",
+    image_model="gpt-image-2.5-flare",
+    output_path="./icon.png",
 )
 print(result.saved_path)
 ```
 
-You can also pass existing images as input:
+## 환경 변수
 
-```python
-# single image
-result = client.generate_image(
-    prompt="Make this cat wear a hat",
-    model="gpt-5.4",
-    output_path="./cat-hat.png",
-    image_paths="./cat.png"
-)
+필요한 경우에만 사용하세요.
 
-# multiple images
-result = client.generate_image(
-    prompt="Combine these two styles",
-    model="gpt-5.4",
-    output_path="./combined.png",
-    image_paths=["./style-a.png", "./style-b.png"]
-)
-```
+| 변수 | 용도 |
+| --- | --- |
+| `IRUM_IMAGEN_IMAGE_MODEL` | 기본 이미지 모델 |
+| `IRUM_IMAGEN_MODEL` | 메인 모델 |
+| `IRUM_IMAGEN_PROVIDER` | `private-codex`, `codex-cli`, `auto` |
+| `IRUM_IMAGEN_OUTPUT` | 기본 출력 경로 |
+| `IRUM_IMAGEN_AUTH_FILE` | Codex 인증 파일 경로 |
 
+이미지 모델을 확실히 지정하려면 `private-codex` 공급자를 사용하세요.
+`codex-cli` 폴백은 특정 이미지 모델을 보장하지 못하므로 명시적 모델 지정 시
+실패하도록 설계되어 있습니다.
 
+## 문제 해결
 
-## Quick Start
+### `irum-imagen: command not found`
 
-### 1. Generate an image via CLI
+Node.js 20 이상인지 확인하고 CLI를 다시 설치한 뒤 새 터미널을 여세요.
 
 ```bash
-gti --prompt "flat blue square icon" --output ./out.png
+node --version
+npm install -g github:IrumHahn/irum-imagen
 ```
 
-### 2. Use in a Node.js script
+### 인증 파일 또는 401 오류
 
-```javascript
-import { createProvider, resolveConfig } from 'god-tibo-imagen';
-
-const config = resolveConfig({ provider: 'private-codex' });
-const provider = createProvider(config);
-
-const result = await provider.generateImage({
-  prompt: 'flat blue square icon',
-  model: 'gpt-5.4',
-  outputPath: './out.png',
-});
-
-console.log(result.savedPath);
-```
-
-### 3. Use in a Python script
-
-```python
-from gti import Client
-
-client = Client(provider="private-codex")
-result = client.generate_image(
-    prompt="flat blue square icon",
-    model="gpt-5.4",
-    output_path="./out.png"
-)
-print(result.saved_path)
-```
-
-With image inputs:
-
-```python
-result = client.generate_image(
-    prompt="Make this cat wear a hat",
-    model="gpt-5.4",
-    output_path="./cat-hat.png",
-    image_paths="./cat.png"
-)
-print(result.saved_path)
-```
-
-## Agent Skill (cross-agent)
-
-For users who want to invoke `god-tibo-imagen` from within any coding agent that supports the [Agent Skills](https://agentskills.io/specification) format (Claude Code, Codex, Cursor, OpenCode, Continue, Gemini CLI, etc.), a portable skill is provided in `skills/god-tibo-imagen/`.
-
-### Setup
-
-- Python 3.10+
-- `pip install god-tibo-imagen` (the import name is `gti`, not `god_tibo_imagen`)
-- Local Codex auth in `~/.codex/auth.json` with `auth_mode = chatgpt`
-
-### Wrapper script
+Codex에서 다시 로그인한 뒤 드라이런을 실행하세요.
 
 ```bash
-# Dry run
-python skills/god-tibo-imagen/scripts/wrapper.py --prompt "flat blue square icon" --output ./test.png --dry-run
-
-# Live generation
-python skills/god-tibo-imagen/scripts/wrapper.py --prompt "flat blue square icon" --output ./out.png
-
-# With image inputs
-python skills/god-tibo-imagen/scripts/wrapper.py --prompt "Make this cat wear a hat" --image ./cat.png --output ./cat-hat.png
+codex login
+irum-imagen --prompt "인증 확인" --dry-run
 ```
 
-### Skill file
+### 이미지를 받지 못함
 
-The skill definition is at `skills/god-tibo-imagen/SKILL.md`. Install it by copying or symlinking the `skills/god-tibo-imagen/` directory into your agent's skills path:
+계정의 이미지 생성 권한과 사용 한도를 확인하세요. 비공개 백엔드가 변경된
+경우에는 이 저장소의 Issues에서 최신 상태를 확인하세요.
 
-- Claude Code: `~/.claude/skills/god-tibo-imagen/`
-- Codex: `~/.codex/skills/god-tibo-imagen/` (or project-local `.agents/skills/god-tibo-imagen/`)
-- OpenCode: `~/.config/opencode/skills/god-tibo-imagen/`
-- Cursor / Continue / Gemini CLI / Kiro: `.agents/skills/god-tibo-imagen/` (project)
+## 보안 주의사항
 
-Or use the Vercel `skills` CLI:
+- `~/.codex/auth.json`을 복사하거나 다른 사람에게 보내지 마세요.
+- 인증 토큰, 계정 ID, 개인 이미지가 포함된 디버그 파일을 공유하지 마세요.
+- 학생 각자가 자신의 기기에서 자신의 ChatGPT 계정으로 로그인해야 합니다.
+- 공개 또는 공동 컴퓨터에서는 사용 후 Codex 로그아웃 상태를 확인하세요.
+
+## 개발 및 검증
 
 ```bash
-npx skills add NomaDamas/god-tibo-imagen --skill god-tibo-imagen
+npm install
+npm test
+npm run check
+npm run build:types
+
+python3 -m pip install -e "./python[dev]"
+python3 -m pytest python/tests
 ```
 
-See `skills/god-tibo-imagen/README.md` for detailed installation per agent.
+## 출처와 라이선스
 
-## Key files
-
-- `src/auth/loadCodexSession.js` — reads Codex auth state
-- `src/auth/validateSession.js` — validates required private-backend fields
-- `src/codex/buildResponsesRequest.js` — builds the `/responses` request
-- `src/codex/streamResponsesSse.js` — parses SSE events
-- `src/codex/extractImageGeneration.js` — finds `image_generation_call`
-- `src/providers/privateCodexProvider.js` — live request/response orchestration
-- `src/providers/codexCliProvider.js` — Hermes-style `codex exec` fallback with file verification
-- `src/providers/createProvider.js` — provider selection and auto fallback
-- `src/cli/generate.js` — CLI entry point
-
-## Notes
-
-- This MVP supports the file-backed `~/.codex/auth.json` path.
-- If your Codex install stores auth only in a keyring and does not materialize `auth.json`, this MVP will not discover it yet.
-- Debug dumps redact bearer tokens, account/session identifiers, installation IDs, cookies, and image payload base64, and store a minimized response summary instead of the raw response body.
-- The architecture now supports both the direct private HTTP client and a Hermes-style `codex exec` fallback, while keeping the provider seam open for future `app-server` integration.
+이 프로젝트는 Jeffrey (Dongkyu) Kim의
+[`NomaDamas/god-tibo-imagen`](https://github.com/NomaDamas/god-tibo-imagen)을
+기반으로 이름, 설치 경험, 학생용 가이드와 Agent Skill을 정리한 파생 프로젝트입니다.
+원본과 이 프로젝트는 MIT 라이선스를 따릅니다. 자세한 내용은
+[`NOTICE.md`](NOTICE.md)와 [`LICENSE`](LICENSE)를 확인하세요.

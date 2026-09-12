@@ -22,7 +22,7 @@ async function runCli(args) {
   }
 }
 
-test('gti --version prints the VERSION file value and exits 0', async () => {
+test('irum-imagen --version prints the VERSION file value and exits 0', async () => {
   const expected = (await fs.readFile(versionPath, 'utf8')).trim();
   const result = await runCli(['--version']);
   assert.equal(result.code, 0, `expected exit 0, got ${result.code}; stderr: ${result.stderr}`);
@@ -32,7 +32,7 @@ test('gti --version prints the VERSION file value and exits 0', async () => {
   );
 });
 
-test('gti -v is an alias for --version', async () => {
+test('irum-imagen -v is an alias for --version', async () => {
   const expected = (await fs.readFile(versionPath, 'utf8')).trim();
   const result = await runCli(['-v']);
   assert.equal(result.code, 0, `expected exit 0, got ${result.code}; stderr: ${result.stderr}`);
@@ -42,7 +42,7 @@ test('gti -v is an alias for --version', async () => {
   );
 });
 
-test('gti --version does not require a prompt', async () => {
+test('irum-imagen --version does not require a prompt', async () => {
   const result = await runCli(['--version']);
   assert.equal(result.code, 0, 'version should short-circuit before the prompt requirement');
 });

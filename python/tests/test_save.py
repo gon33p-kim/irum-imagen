@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from src.gti.errors import CodexError
-from src.gti.save import save_image
+from src.irum_imagen.errors import CodexError
+from src.irum_imagen.save import save_image
 from typing import cast
 
 

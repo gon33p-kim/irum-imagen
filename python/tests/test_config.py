@@ -1,16 +1,16 @@
 from __future__ import annotations
 
-from src.gti.config import DEFAULT_IMAGE_MODEL, PRIVATE_CODEX_PROVIDER, resolve_config
+from src.irum_imagen.config import DEFAULT_IMAGE_MODEL, PRIVATE_CODEX_PROVIDER, resolve_config
 
 
 def test_resolve_config_uses_env_defaults(monkeypatch, tmp_path):
     monkeypatch.setenv("CODEX_HOME", str(tmp_path / "codex-home"))
-    monkeypatch.setenv("CODEX_IMAGEGEN_BASE_URL", "https://example.com/base")
-    monkeypatch.setenv("CODEX_IMAGEGEN_PROVIDER", "private-codex")
-    monkeypatch.setenv("CODEX_IMAGEGEN_MODEL", "model-x")
-    monkeypatch.setenv("CODEX_IMAGEGEN_ORIGINATOR", "origin-x")
-    monkeypatch.setenv("CODEX_IMAGEGEN_OUTPUT", str(tmp_path / "out.png"))
-    monkeypatch.setenv("CODEX_IMAGEGEN_IMAGE_MODEL", "gpt-image-2.5-sunburst")
+    monkeypatch.setenv("IRUM_IMAGEN_BASE_URL", "https://example.com/base")
+    monkeypatch.setenv("IRUM_IMAGEN_PROVIDER", "private-codex")
+    monkeypatch.setenv("IRUM_IMAGEN_MODEL", "model-x")
+    monkeypatch.setenv("IRUM_IMAGEN_ORIGINATOR", "origin-x")
+    monkeypatch.setenv("IRUM_IMAGEN_OUTPUT", str(tmp_path / "out.png"))
+    monkeypatch.setenv("IRUM_IMAGEN_IMAGE_MODEL", "gpt-image-2.5-sunburst")
 
     config = resolve_config()
 
@@ -27,7 +27,7 @@ def test_resolve_config_uses_env_defaults(monkeypatch, tmp_path):
 
 
 def test_resolve_config_defaults_image_model_to_flare(monkeypatch):
-    monkeypatch.delenv("CODEX_IMAGEGEN_IMAGE_MODEL", raising=False)
+    monkeypatch.delenv("IRUM_IMAGEN_IMAGE_MODEL", raising=False)
     config = resolve_config()
     assert config["defaultImageModel"] == DEFAULT_IMAGE_MODEL
     assert DEFAULT_IMAGE_MODEL == "gpt-image-2.5-flare"

@@ -15,15 +15,15 @@ export const DEFAULT_IMAGE_MODEL = 'gpt-image-2.5-flare';
  */
 export function resolveConfig(overrides = {}) {
   const codexHome = overrides.codexHome || process.env.CODEX_HOME || DEFAULT_CODEX_HOME;
-  const baseUrl = overrides.baseUrl || process.env.CODEX_IMAGEGEN_BASE_URL || 'https://chatgpt.com/backend-api/codex';
-  const authFile = overrides.authFile || process.env.CODEX_IMAGEGEN_AUTH_FILE || path.join(codexHome, 'auth.json');
+  const baseUrl = overrides.baseUrl || process.env.IRUM_IMAGEN_BASE_URL || 'https://chatgpt.com/backend-api/codex';
+  const authFile = overrides.authFile || process.env.IRUM_IMAGEN_AUTH_FILE || path.join(codexHome, 'auth.json');
   const installationIdFile =
     overrides.installationIdFile ||
-    process.env.CODEX_IMAGEGEN_INSTALLATION_ID_FILE ||
+    process.env.IRUM_IMAGEN_INSTALLATION_ID_FILE ||
     path.join(codexHome, 'installation_id');
   const generatedImagesDir =
     overrides.generatedImagesDir ||
-    process.env.CODEX_IMAGEGEN_GENERATED_IMAGES_DIR ||
+    process.env.IRUM_IMAGEN_GENERATED_IMAGES_DIR ||
     path.join(codexHome, 'generated_images');
 
   return {
@@ -32,14 +32,14 @@ export function resolveConfig(overrides = {}) {
     authFile,
     installationIdFile,
     generatedImagesDir,
-    provider: overrides.provider || process.env.CODEX_IMAGEGEN_PROVIDER || PRIVATE_CODEX_PROVIDER,
-    defaultModel: overrides.defaultModel || process.env.CODEX_IMAGEGEN_MODEL || process.env.CODEX_MODEL || 'gpt-5.4',
-    defaultImageModel: overrides.defaultImageModel || process.env.CODEX_IMAGEGEN_IMAGE_MODEL || DEFAULT_IMAGE_MODEL,
+    provider: overrides.provider || process.env.IRUM_IMAGEN_PROVIDER || PRIVATE_CODEX_PROVIDER,
+    defaultModel: overrides.defaultModel || process.env.IRUM_IMAGEN_MODEL || process.env.CODEX_MODEL || 'gpt-5.4',
+    defaultImageModel: overrides.defaultImageModel || process.env.IRUM_IMAGEN_IMAGE_MODEL || DEFAULT_IMAGE_MODEL,
     defaultOriginator:
-      overrides.originator || process.env.CODEX_IMAGEGEN_ORIGINATOR || process.env.CODEX_INTERNAL_ORIGINATOR_OVERRIDE || 'codex_cli_rs',
+      overrides.originator || process.env.IRUM_IMAGEN_ORIGINATOR || process.env.CODEX_INTERNAL_ORIGINATOR_OVERRIDE || 'codex_cli_rs',
     defaultOutputPath:
       overrides.defaultOutputPath ||
-      process.env.CODEX_IMAGEGEN_OUTPUT ||
+      process.env.IRUM_IMAGEN_OUTPUT ||
       path.resolve(process.cwd(), `generated-${Date.now()}.png`)
   };
 }

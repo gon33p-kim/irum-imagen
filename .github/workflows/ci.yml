@@ -44,8 +44,8 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install Python test dependencies
-        run: python -m pip install --upgrade pip pytest pytest-asyncio httpx
+      - name: Install Python package and test dependencies
+        run: python -m pip install --upgrade pip './python[dev]'
 
       - name: Run Python tests
-        run: pytest python/tests/
+        run: python -m pytest python/tests/

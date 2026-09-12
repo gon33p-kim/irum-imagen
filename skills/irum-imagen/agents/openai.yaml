@@ -1,0 +1,8 @@
+interface:
+  display_name: "irum-imagen"
+  short_description: "Generate and edit images with GPT Image 2.5"
+  brand_color: "#3B82F6"
+  default_prompt: "Use irum-imagen to generate a polished image from my description"
+
+policy:
+  allow_implicit_invocation: false

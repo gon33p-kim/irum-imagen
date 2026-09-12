@@ -4,7 +4,7 @@ import path from 'node:path';
 
 export const PNG_BASE64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9WlAbwAAAABJRU5ErkJggg==';
 
-export async function makeTempDir(prefix = 'codex-imagegen-test-') {
+export async function makeTempDir(prefix = 'irum-imagen-test-') {
   return fs.mkdtemp(path.join(os.tmpdir(), prefix));
 }
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Agent-skill wrapper for god-tibo-imagen.
+"""Agent Skill wrapper for irum-imagen.
 
-A lightweight CLI wrapper around the god-tibo-imagen Python SDK designed
+A lightweight CLI wrapper around the irum-imagen Python SDK designed
 for invocation from any coding agent that supports the Agent Skills format
 (Claude Code, Codex, Cursor, OpenCode, Continue, Gemini CLI, etc.) as well
 as direct command-line usage.
@@ -16,16 +16,21 @@ import argparse
 import json
 import sys
 
-from gti.client import Client
+from irum_imagen.client import Client
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Generate images via the god-tibo-imagen Python SDK."
+        description="Generate images via the irum-imagen Python SDK."
     )
     parser.add_argument("--prompt", required=True, help="Image generation prompt")
     parser.add_argument("--output", help="Output file path")
     parser.add_argument("--model", help="Model to use (defaults to SDK configuration)")
+    parser.add_argument(
+        "--image-model",
+        help="Image model, such as gpt-image-2.5-flare or gpt-image-2.5-sunburst",
+    )
+    parser.add_argument("--size", help="Requested output dimensions")
     parser.add_argument("--dry-run", action="store_true", help="Dry run mode")
     parser.add_argument("--auth-file", help="Path to Codex auth.json")
     parser.add_argument(
@@ -55,6 +60,10 @@ def main() -> int:
     }
     if args.model:
         gen_kwargs["model"] = args.model
+    if args.image_model:
+        gen_kwargs["image_model"] = args.image_model
+    if args.size:
+        gen_kwargs["size"] = args.size
     if args.output:
         gen_kwargs["output_path"] = args.output
     if args.image:

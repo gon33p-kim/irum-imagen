@@ -1,82 +1,46 @@
-# god-tibo-imagen
+# irum-imagen Python SDK
 
-Python SDK for sending image-generation requests to Codex's private ChatGPT-authenticated backend path.
+Codex에 로그인된 ChatGPT 계정을 사용해 GPT Image 2.5 이미지를 생성하고
+편집하는 Python SDK입니다. 비공개 Codex 백엔드에 의존하므로 예고 없이
+동작이 변경될 수 있습니다.
 
-> WARNING: This is **not** a supported public API integration. It depends on private Codex request behavior that may change without notice.
-
-## Installation
+## GitHub에서 설치
 
 ```bash
-pip install god-tibo-imagen
+pip install "git+https://github.com/IrumHahn/irum-imagen.git#subdirectory=python"
 ```
 
-## Usage
+## 사용법
 
 ```python
-from gti import Client
+from irum_imagen import Client
 
 client = Client(provider="private-codex")
 result = client.generate_image(
-    prompt="flat blue square icon",
-    model="gpt-5.4",
-    output_path="./out.png"
+    prompt="흰 배경의 파란색 머그컵 제품 사진",
+    image_model="gpt-image-2.5-flare",
+    output_path="./mug.png",
 )
 print(result.saved_path)
 ```
 
-### Image input
-
-You can provide existing images as additional context alongside your text prompt. Images are embedded as base64 data URLs and sent with the request.
-
-```python
-# single image
-result = client.generate_image(
-    prompt="Make this cat wear a hat",
-    model="gpt-5.4",
-    output_path="./cat-hat.png",
-    image_paths="./cat.png"
-)
-
-# multiple images
-result = client.generate_image(
-    prompt="Combine these two styles",
-    model="gpt-5.4",
-    output_path="./combined.png",
-    image_paths=["./style-a.png", "./style-b.png"]
-)
-```
-
-Supported formats: `png`, `jpg`/`jpeg`, `gif`, `webp`.
-
-### Image model (ChatGPT Images 2.5)
-
-The client defaults to ChatGPT Images 2.5 `gpt-image-2.5-flare`. Pass `image_model` to override:
-
-- `gpt-image-2.5-flare` — default fast tier (up to 50% lower latency than Images 2.0)
-- `gpt-image-2.5-sunburst` — slower, higher-precision tier
+기본 이미지 모델은 `gpt-image-2.5-flare`입니다. 정밀 편집에는
+`gpt-image-2.5-sunburst`를 지정하세요.
 
 ```python
 result = client.generate_image(
-    prompt="a sunset over mountains",
-    model="gpt-5.4",
-    output_path="./sunset.png",
-)
-result = client.generate_image(
-    prompt="a sunset over mountains",
-    model="gpt-5.4",
-    output_path="./sunset.png",
+    prompt="제품 형태는 유지하고 배경만 스튜디오로 변경",
+    image_paths="./product.png",
     image_model="gpt-image-2.5-sunburst",
+    output_path="./product-edited.png",
 )
 ```
 
-The value is forwarded as `model` on the `image_generation` tool config. `CODEX_IMAGEGEN_IMAGE_MODEL` overrides the default.
-
-### Dry run
+드라이런은 실제 생성 없이 요청 구조를 반환합니다.
 
 ```python
-result = client.generate_image(
-    prompt="flat blue square icon",
-    dry_run=True
-)
-print(result["mode"])  # "dry-run"
+result = client.generate_image(prompt="인증 확인", dry_run=True)
+print(result.request)
 ```
+
+전체 설치·보안·문제 해결 가이드는 저장소 루트의 `README.md`를 참고하세요.

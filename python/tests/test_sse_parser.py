@@ -4,8 +4,8 @@ from typing import cast
 
 import pytest
 
-from src.gti.errors import CodexError
-from src.gti.sse_parser import parse_sse_text
+from src.irum_imagen.errors import CodexError
+from src.irum_imagen.sse_parser import parse_sse_text
 from .conftest import fixture_text
 
 

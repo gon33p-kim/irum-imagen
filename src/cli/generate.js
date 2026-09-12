@@ -153,12 +153,12 @@ function printHelp() {
 ${UNSUPPORTED_WARNING}
 
 Usage:
-  node src/cli/generate.js --prompt "flat blue square icon" --output ./out/image.png
+  irum-imagen --prompt "flat blue square icon" --output ./out/image.png
 
 Options:
   --prompt <text>               Required prompt text
   --output <path>               Output PNG path
-  --model <name>                Model name (default: CODEX_IMAGEGEN_MODEL or gpt-5.4)
+  --model <name>                Main model (default: IRUM_IMAGEN_MODEL or gpt-5.4)
   --image-model <name>          Image model for the image_generation tool (private-codex only;
                                 default: gpt-image-2.5-flare). Also: gpt-image-2.5-sunburst
   --provider <name>             Provider: private-codex | codex-cli | auto
@@ -173,7 +173,7 @@ Options:
   --installation-id-file <path> Override installation_id path
   --base-url <url>              Override private Codex base URL
   -h, --help                    Show help
-  -v, --version                 Print the gti version and exit
+  -v, --version                 Print the irum-imagen version and exit
 `);
 }
 
@@ -206,11 +206,11 @@ async function main() {
   const result = await provider.generateImage({
     prompt: args.prompt,
     model: args.model || config.defaultModel,
-    imageModel: args.imageModel || process.env.CODEX_IMAGEGEN_IMAGE_MODEL || undefined,
+    imageModel: args.imageModel || process.env.IRUM_IMAGEN_IMAGE_MODEL || undefined,
     outputPath,
     dryRun: args.dryRun,
     debug: args.debug,
-    debugDir: args.debugDir ? path.resolve(args.debugDir) : args.debug ? path.resolve('.debug-codex-imagegen') : null,
+    debugDir: args.debugDir ? path.resolve(args.debugDir) : args.debug ? path.resolve('.debug-irum-imagen') : null,
     images,
     ...(args.size ? { size: args.size } : {})
   });

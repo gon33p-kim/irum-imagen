@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
 
-const skillDir = path.join(rootDir, 'skills', 'god-tibo-imagen');
+const skillDir = path.join(rootDir, 'skills', 'irum-imagen');
 const wrapperPath = path.join(skillDir, 'scripts', 'wrapper.py');
 const skillMdPath = path.join(skillDir, 'SKILL.md');
 const skillReadmePath = path.join(skillDir, 'README.md');
@@ -47,7 +47,7 @@ test('agent-skill wrapper script is valid Python', async () => {
   assert.ok(content.includes('def main('), 'wrapper should define a main function');
   assert.ok(content.includes('if __name__ == "__main__":'), 'wrapper should have __main__ guard');
   assert.ok(
-    content.includes('import argparse') || content.includes('from gti'),
+    content.includes('import argparse') || content.includes('from irum_imagen'),
     'wrapper should import required modules'
   );
 });
@@ -60,7 +60,7 @@ test('agent-skill SKILL.md exists with valid frontmatter', async () => {
   assert.ok(parsed.meta.name, 'frontmatter should have a name');
   assert.ok(parsed.meta.description, 'frontmatter should have a description');
   assert.ok(parsed.body.includes('#'), 'SKILL.md body should contain markdown headers');
-  assert.equal(parsed.meta.name, 'god-tibo-imagen', 'name must match parent directory (agentskills.io spec)');
+  assert.equal(parsed.meta.name, 'irum-imagen', 'name must match parent directory (agentskills.io spec)');
   assert.match(parsed.meta.name, /^[a-z0-9]+(-[a-z0-9]+)*$/, 'name must be lowercase + hyphens only');
 });
 
@@ -85,12 +85,12 @@ test('agent-skill agents/openai.yaml exists and is valid', async () => {
   }
 });
 
-test('README.md references the agent-skill example by new path', async () => {
+test('README.md references the irum-imagen skill path', async () => {
   const readmePath = path.join(rootDir, 'README.md');
   const content = await fs.readFile(readmePath, 'utf8');
   assert.ok(
-    content.includes('skills/god-tibo-imagen'),
-    'root README should reference skills/god-tibo-imagen'
+    content.includes('skills/irum-imagen'),
+    'root README should reference skills/irum-imagen'
   );
 });
 
@@ -100,11 +100,11 @@ test('no leftover legacy codex-skill paths exist under examples/', async () => {
   assert.equal(
     await fileExists(legacyDir),
     false,
-    'examples/codex-skill/ should have been removed in favor of skills/god-tibo-imagen/'
+    'examples/codex-skill/ should have been removed in favor of skills/irum-imagen/'
   );
   assert.equal(
     await fileExists(legacyWrapper),
     false,
-    'examples/codex-skill-wrapper.py should have been moved to skills/god-tibo-imagen/scripts/wrapper.py'
+    'examples/codex-skill-wrapper.py should have been moved to skills/irum-imagen/scripts/wrapper.py'
   );
 });
