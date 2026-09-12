@@ -17,7 +17,7 @@ backend.
 1. Confirm `irum-imagen` is on `PATH`. If missing, tell the user to run:
 
    ```bash
-   npm install -g github:IrumHahn/irum-imagen
+   npm install -g https://github.com/IrumHahn/irum-imagen/archive/refs/heads/main.tar.gz
    ```
 
 2. Confirm Codex reports a ChatGPT login with `codex login status`. If the local

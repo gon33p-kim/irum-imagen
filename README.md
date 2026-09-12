@@ -37,7 +37,7 @@ codex login status
 현재 GitHub 저장소에서 직접 설치합니다.
 
 ```bash
-npm install -g github:IrumHahn/irum-imagen
+npm install -g https://github.com/IrumHahn/irum-imagen/archive/refs/heads/main.tar.gz
 ```
 
 설치를 확인합니다.
@@ -156,7 +156,7 @@ $irum-imagen을 사용해서 흰 배경의 화장품 제품 사진을 만들어�
 ## Node.js SDK
 
 ```bash
-npm install github:IrumHahn/irum-imagen
+npm install https://github.com/IrumHahn/irum-imagen/archive/refs/heads/main.tar.gz
 ```
 
 ```javascript
@@ -217,7 +217,7 @@ Node.js 20 이상인지 확인하고 CLI를 다시 설치한 뒤 새 터미널�
 
 ```bash
 node --version
-npm install -g github:IrumHahn/irum-imagen
+npm install -g https://github.com/IrumHahn/irum-imagen/archive/refs/heads/main.tar.gz
 ```
 
 ### 인증 파일 또는 401 오류

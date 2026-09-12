@@ -8,7 +8,7 @@ Codex·Claude Code·Cursor 같은 Agent Skill 호환 도구에서 `irum-imagen`�
 먼저 CLI를 설치합니다.
 
 ```bash
-npm install -g github:IrumHahn/irum-imagen
+npm install -g https://github.com/IrumHahn/irum-imagen/archive/refs/heads/main.tar.gz
 ```
 
 그다음 스킬을 설치합니다.
