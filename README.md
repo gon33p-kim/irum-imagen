@@ -15,7 +15,7 @@ Codex에 로그인된 ChatGPT 계정을 이용해 GPT Image 2.5 이미지를 생
 - 텍스트 이미지 생성과 기존 이미지 편집
 - 정사각형·가로형·세로형 출력 크기 요청
 - 실제 호출 없이 인증과 요청 구조를 확인하는 드라이런
-- Codex, Claude Code, Cursor 등에서 사용할 수 있는 Agent Skill
+- 이미지 실행용 `irum-imagen`과 슈퍼리얼 연출용 `super-real-images` Agent Skill
 - 디버그 출력의 토큰·계정 ID·이미지 데이터 자동 마스킹
 
 ## 학생용 빠른 설치
@@ -130,28 +130,37 @@ irum-imagen \
 
 ## Agent Skill 설치
 
-CLI를 먼저 설치한 뒤 Agent Skill을 설치합니다.
+CLI를 먼저 설치한 뒤 필요한 Agent Skill을 설치합니다.
+
+이미지 생성·편집 명령을 실행하는 스킬:
 
 ```bash
 npx skills add IrumHahn/irum-imagen --skill irum-imagen
 ```
 
-Codex에서 다음처럼 명시적으로 호출할 수 있습니다.
+자연스러운 빛, 카메라, 피부 질감과 생활 동작을 설계하는 슈퍼리얼 스킬:
+
+```bash
+npx skills add IrumHahn/irum-imagen --skill super-real-images
+```
+
+두 스킬을 함께 설치하면 연출 설계부터 이미지 생성까지 연결할 수 있습니다.
 
 ```text
-$irum-imagen을 사용해서 흰 배경의 화장품 제품 사진을 만들어줘.
+$super-real-images와 $irum-imagen을 사용해서 골든아워의 생활감 있는 AI 인플루언서 사진을 만들어줘.
 ```
 
 수동 설치 경로는 다음과 같습니다.
 
 | 도구 | 설치 경로 |
 | --- | --- |
-| Codex | `~/.codex/skills/irum-imagen/` |
-| Claude Code | `~/.claude/skills/irum-imagen/` |
-| OpenCode | `~/.config/opencode/skills/irum-imagen/` |
-| Cursor·Continue·Gemini CLI | 프로젝트의 `.agents/skills/irum-imagen/` |
+| Codex | `~/.codex/skills/<skill-name>/` |
+| Claude Code | `~/.claude/skills/<skill-name>/` |
+| OpenCode | `~/.config/opencode/skills/<skill-name>/` |
+| Cursor·Continue·Gemini CLI | 프로젝트의 `.agents/skills/<skill-name>/` |
 
-배포용 스킬 원본은 [`skills/irum-imagen`](skills/irum-imagen)에 있습니다.
+배포용 스킬 원본은 [`skills/irum-imagen`](skills/irum-imagen)과
+[`skills/super-real-images`](skills/super-real-images)에 있습니다.
 
 ## Node.js SDK
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Super Real Images"
+  short_description: "자연스러운 빛과 질감으로 슈퍼리얼 이미지를 제작합니다"
+  default_prompt: "$super-real-images로 생활감 있는 슈퍼리얼 인물 사진을 만들어줘."

@@ -22,5 +22,6 @@ test('package metadata exposes the irum-imagen commands and repository', async (
     'https://github.com/IrumHahn/irum-imagen.git'
   );
   assert.ok(packageJson.files.includes('skills/irum-imagen/'));
+  assert.ok(packageJson.files.includes('skills/super-real-images/'));
   assert.ok(packageJson.files.includes('NOTICE.md'));
 });

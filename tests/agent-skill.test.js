@@ -12,6 +12,13 @@ const wrapperPath = path.join(skillDir, 'scripts', 'wrapper.py');
 const skillMdPath = path.join(skillDir, 'SKILL.md');
 const skillReadmePath = path.join(skillDir, 'README.md');
 const openaiYamlPath = path.join(skillDir, 'agents', 'openai.yaml');
+const superRealSkillDir = path.join(rootDir, 'skills', 'super-real-images');
+const superRealSkillMdPath = path.join(superRealSkillDir, 'SKILL.md');
+const superRealReferences = [
+  'prompt-blueprint.md',
+  'shot-library.md',
+  'batch-and-qc.md'
+];
 
 async function fileExists(p) {
   try {
@@ -83,6 +90,29 @@ test('agent-skill agents/openai.yaml exists and is valid', async () => {
     const referencedPath = path.join(skillDir, match[1]);
     assert.equal(await fileExists(referencedPath), true, `${match[1]} should exist`);
   }
+});
+
+test('super-real-images skill includes valid metadata and references', async () => {
+  assert.equal(await fileExists(superRealSkillMdPath), true, 'SKILL.md should exist');
+  const content = await fs.readFile(superRealSkillMdPath, 'utf8');
+  const parsed = parseYamlFrontmatter(content);
+  assert.ok(parsed, 'SKILL.md should have YAML frontmatter');
+  assert.equal(parsed.meta.name, 'super-real-images');
+  assert.ok(parsed.meta.description, 'frontmatter should have a description');
+  for (const reference of superRealReferences) {
+    assert.equal(
+      await fileExists(path.join(superRealSkillDir, 'references', reference)),
+      true,
+      `${reference} should exist`
+    );
+  }
+});
+
+test('README.md references both distributed skill paths', async () => {
+  const readmePath = path.join(rootDir, 'README.md');
+  const content = await fs.readFile(readmePath, 'utf8');
+  assert.ok(content.includes('skills/irum-imagen'));
+  assert.ok(content.includes('skills/super-real-images'));
 });
 
 test('README.md references the irum-imagen skill path', async () => {
