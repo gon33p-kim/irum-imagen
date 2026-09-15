@@ -1,0 +1,4 @@
+interface:
+  display_name: "Super Real Imagen"
+  short_description: "개인 참고자료를 로컬에서 연결하는 자연스러운 실사 인물 제작"
+  default_prompt: "$super-real-imagen 로컬 참고자료를 활용해 자연스러운 실사 인물 이미지를 만들어줘."
